@@ -1,0 +1,58 @@
+import pandas as pd
+
+# Load the dataset
+df = pd.read_csv('retail_sales_data.csv')
+
+# Display the first few rows to understand the structure
+print(df.head())
+
+# Basic statistics
+mean_sales = df['Sales'].mean()
+median_sales = df['Sales'].median()
+std_dev_sales = df['Sales'].std()
+
+# Mode (if applicable)
+mode_sales = df['Sales'].mode().iloc[0]
+
+print(f"Mean Sales: {mean_sales}")
+print(f"Median Sales: {median_sales}")
+print(f"Standard Deviation of Sales: {std_dev_sales}")
+print(f"Mode of Sales: {mode_sales}")
+
+
+# Convert 'Date' column to datetime format
+df['Date'] = pd.to_datetime(df['Date'])
+
+# Set 'Date' as index for time series analysis
+df.set_index('Date', inplace=True)
+
+# Resample data to monthly frequency and calculate sum of sales
+monthly_sales = df['Sales'].resample('M').sum()
+
+# Plotting time series (example)
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(12, 6))
+plt.plot(monthly_sales.index, monthly_sales, marker='o', linestyle='-')
+plt.title('Monthly Sales Trends')
+plt.xlabel('Date')
+plt.ylabel('Sales')
+plt.grid(True)
+plt.show()
+
+# Example: Customer demographics analysis
+customer_age_distribution = df['Age'].value_counts()
+
+# Example: Product analysis
+product_sales_summary = df.groupby('Product')['Sales'].sum().sort_values(ascending=False).head(10)
+
+# Example: Bar chart for product sales
+plt.figure(figsize=(10, 6))
+product_sales_summary.plot(kind='bar', color='skyblue')
+plt.title('Top 10 Products by Sales')
+plt.xlabel('Product')
+plt.ylabel('Total Sales')
+plt.xticks(rotation=45)
+plt.show()
+
+
